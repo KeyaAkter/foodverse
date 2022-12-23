@@ -5,6 +5,7 @@ import Favourites from "./components/Favourites";
 import NotFound from "./components/NotFound";
 import Navbar from "./components/Navbar";
 import { useRef, useState } from "react";
+import RecipeItem from "./components/RecipeItem";
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,6 +22,7 @@ const App = () => {
 
     setSearchQuery(""); // reset the search input value to empty sring
     inputField.current.blur(); // after completion of search, the cursor will be blur
+    setRecipes([]); // reset the state of recipes array everytime after submitting the form
   };
 
   // getting search data from api
@@ -29,12 +31,14 @@ const App = () => {
       setLoading(true); // set the loading value into true
 
       const res = await fetch(
-        `https://forkify-api.herokuapp.com/api/search?q=${searchQuery}`
+        `https://forkify-api.herokuapp.com/api/v2/recipes?search=${searchQuery}`
       );
-      if (!res.ok) throw new Error("No recipe found!");
+      if (!res.ok) throw new Error("Something went wrong!");
       const data = await res.json();
 
-      setRecipes(data.recipes); // set the value of the recipes variable
+      if (data.results === 0) throw new Error("No recipe found!");
+
+      setRecipes(data?.data?.recipes); // set the value of the recipes variable
 
       setLoading(false); // after setting the recipes, loading will be false
     } catch (err) {
@@ -57,6 +61,7 @@ const App = () => {
             element={<Home recipes={recipes} loading={loading} error={error} />}
           />
           <Route path="/favourites" element={<Favourites />} />
+          <Route path="/recipe-item/:id" element={<RecipeItem />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
