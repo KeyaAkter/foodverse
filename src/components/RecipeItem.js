@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useFetch } from "../hooks/useFetch";
 
-const RecipeItem = ({ recipes, favouriteHandler, savedItems }) => {
+const RecipeItem = ({ favouriteHandler, savedItems }) => {
   const { id } = useParams(); // The useParams hook returns an object of key/value pairs of the dynamic params from the current URL that were matched by the <Route path>
   const { data: recipe, loading, error } = useFetch(id); // calling custom hook to get the specific recipe item
 
@@ -17,12 +17,10 @@ const RecipeItem = ({ recipes, favouriteHandler, savedItems }) => {
     }
 
     if (String(duration).includes(".")) {
-      // split
-
       const splittedDuration = String(duration).split(".");
       const hour = splittedDuration[0] + "h";
-      const splittedminutes = "." + splittedDuration[1];
-      const minutes = String(+splittedminutes * 60) + "min";
+      const splittedMinutes = "." + splittedDuration[1];
+      const minutes = String(+splittedMinutes * 60) + "min";
 
       return hour + minutes;
     }
@@ -43,7 +41,7 @@ const RecipeItem = ({ recipes, favouriteHandler, savedItems }) => {
             alt={recipe?.title}
           />
         </div>
-        <div className="ingradients mt-10">
+        <div className="ingredients mt-10">
           <span className="ing-title text-3xl font-medium mb-5 inline-block">
             Ingredients:
           </span>
@@ -60,7 +58,7 @@ const RecipeItem = ({ recipes, favouriteHandler, savedItems }) => {
         <span className="publisher uppercase tracking-widest font-semibold text-sky-400 ">
           {recipe?.publisher}
         </span>
-        <h2 className="title text-4xl capitalize">{recipe?.title}</h2>
+        <h2 className="title text-5xl capitalize">{recipe?.title}</h2>
         <div className="servings-cooking-time flex gap-5 uppercase tracking-widest font-semibold text-rose-500">
           <div className="servings">Served for :{recipe?.servings} people</div>
           <div className="cooking-time">
@@ -70,12 +68,12 @@ const RecipeItem = ({ recipes, favouriteHandler, savedItems }) => {
               : durationCalc(recipe?.cooking_time / 60)}
           </div>
         </div>
-        <div className="btns">
+        <div className="btns flex gap-5">
           <button
             onClick={() => favouriteHandler(recipe?.id)}
             className={`bg-gradient-to-br p-3 px-8 rounded-lg text-sm uppercase font-medium tracking-wider mt-2 inline-block shadow-md hover:shadow-lg duration-300 ${
               itemsSavedStatus
-                ? " from-rose-400 to-rose-600 text-rose-50  shadow-rose-200  hover:shadow-rose-300"
+                ? " from-orange-400 to-orange-600 text-orange-50  shadow-orange-200  hover:shadow-orange-300"
                 : " from-sky-400 to-sky-600 text-sky-50  shadow-sky-200  hover:shadow-sky-300"
             }`}
           >

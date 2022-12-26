@@ -16,7 +16,7 @@ export const useFetch = (id) => {
           throw new Error("Something went wrong, please try again later!");
         const data = await res.json();
         setData(data?.data?.recipe);
-        setLoading(false); // after set the data, loading will be false
+        setLoading(false); // Loading must be false after getting the recipes.
       } catch (err) {
         setError(err.message);
       }
