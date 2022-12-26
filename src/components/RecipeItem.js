@@ -26,6 +26,7 @@ const RecipeItem = ({ favouriteHandler, savedItems }) => {
     }
   };
 
+  // Depending on each recipe, automatically update the state of saved items
   useEffect(() => {
     if (!recipe) return;
     setItemsSavedStatus(savedItems.some((item) => item.id === recipe.id));
@@ -34,9 +35,9 @@ const RecipeItem = ({ favouriteHandler, savedItems }) => {
   return (
     <div className="recipe-item container mx-auto py-20 grid grid-cols-1 lg:grid-cols-2 gap-10">
       <div className="left row-start-2 lg:row-start-auto">
-        <div className="img overflow-hidden rounded-xl border shadow-md group">
+        <div className="img overflow-hidden flex justify-center items-center lg:h-96 rounded-xl border shadow-md group">
           <img
-            className="w-full h-full object-cover group-hover:scale-105 duration-300"
+            className="w-full block rounded-xl group-hover:scale-105 duration-300"
             src={recipe?.image_url}
             alt={recipe?.title}
           />
@@ -45,7 +46,8 @@ const RecipeItem = ({ favouriteHandler, savedItems }) => {
           <span className="ing-title text-3xl font-medium mb-5 inline-block">
             Ingredients:
           </span>
-          <ul className="flex flex-col gap-2">
+          <hr className="border-rose-100" />
+          <ul className="flex flex-col gap-2 mt-5">
             {recipe?.ingredients?.map((ing, i) => (
               <li key={i}>
                 ✔ {ing.quantity} {ing.unit} {ing.description}
@@ -60,9 +62,9 @@ const RecipeItem = ({ favouriteHandler, savedItems }) => {
         </span>
         <h2 className="title text-5xl capitalize">{recipe?.title}</h2>
         <div className="servings-cooking-time flex gap-5 uppercase tracking-widest font-semibold text-rose-500">
-          <div className="servings">Served for :{recipe?.servings} people</div>
+          <div className="servings">Served for : {recipe?.servings} people</div>
           <div className="cooking-time">
-            Cooking time :
+            Cooking time :{" "}
             {recipe?.cooking_time < 60
               ? String(recipe?.cooking_time) + "min"
               : durationCalc(recipe?.cooking_time / 60)}

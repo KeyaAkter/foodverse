@@ -15,7 +15,7 @@ const App = () => {
   const [savedItems, setSavedItems] = useState(() => {
     const localData = localStorage.getItem("recipes");
     return localData ? JSON.parse(localData) : [];
-  });
+  }); // Set the existing data at initial value if it already exists in local storage; otherwise, set the empty array as initial value.
 
   const navigate = useNavigate();
 
@@ -55,11 +55,13 @@ const App = () => {
     }
   };
 
+  // Checking the existance of local data
   const checkLocalData = (data) => {
-    const localData = JSON.parse(localStorage.getItem("recipes"));
+    const localData = JSON.parse(localStorage.getItem("recipes")); // Set the local data into the array as an object in the local storage
 
-    const existedData = localData.some((item) => item.id === data.id);
+    const existedData = localData.some((item) => item.id === data.id); // Return the existing data if the data already exists.
 
+    // Set data if it doesn't already exist in local storage; else, get it by filtering all previously collected data and delete it, and update the state with the filtered information.
     if (!existedData) {
       setSavedItems([...savedItems, data]);
     } else {
@@ -73,11 +75,12 @@ const App = () => {
   const favouriteHandler = (id) => {
     fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`)
       .then((res) => res.json())
-      .then((data) => checkLocalData(data.data.recipe));
+      .then((data) => checkLocalData(data?.data?.recipe));
 
-    navigate("/favourites");
+    navigate("/favourites"); // navigate to favourite page from home page
   };
 
+  // update the saved items
   useEffect(() => {
     localStorage.setItem("recipes", JSON.stringify(savedItems));
   }, [savedItems]);
