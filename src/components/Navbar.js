@@ -33,7 +33,7 @@ const Navbar = ({
       <ul className="menu flex gap-5">
         <li>
           <NavLink
-            style={{ navActive }}
+            style={navActive}
             end
             to="/"
             className="text-gray-400 hover:text-gray-600 duration-300"
@@ -43,7 +43,7 @@ const Navbar = ({
         </li>
         <li>
           <NavLink
-            style={{ navActive }}
+            style={navActive}
             to="/favourites"
             className="text-gray-400 hover:text-gray-600 duration-300"
           >
