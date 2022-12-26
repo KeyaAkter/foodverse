@@ -1,10 +1,14 @@
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { useFetch } from "../hooks/useFetch";
 
-const RecipeItem = () => {
+const RecipeItem = ({ recipes, favouriteHandler, savedItems }) => {
   const { id } = useParams(); // The useParams hook returns an object of key/value pairs of the dynamic params from the current URL that were matched by the <Route path>
   const { data: recipe, loading, error } = useFetch(id); // calling custom hook to get the specific recipe item
 
+  const [itemsSavedStatus, setItemsSavedStatus] = useState(null);
+
+  // Cooking time calculation
   const durationCalc = (duration) => {
     if (!duration) return;
 
@@ -13,19 +17,37 @@ const RecipeItem = () => {
     }
 
     if (String(duration).includes(".")) {
-      return String(duration).replace(".", "h") + "min";
+      // split
+
+      const splittedDuration = String(duration).split(".");
+      const hour = splittedDuration[0] + "h";
+      const splittedminutes = "." + splittedDuration[1];
+      const minutes = String(+splittedminutes * 60) + "min";
+
+      return hour + minutes;
     }
   };
 
+  useEffect(() => {
+    if (!recipe) return;
+    setItemsSavedStatus(savedItems.some((item) => item.id === recipe.id));
+  }, [recipe]);
+
   return (
     <div className="recipe-item container mx-auto py-20 grid grid-cols-1 lg:grid-cols-2 gap-10">
-      <div className="left">
-        <div className="img">
-          <img src={recipe?.image_url} alt={recipe?.title} />
+      <div className="left row-start-2 lg:row-start-auto">
+        <div className="img overflow-hidden rounded-xl border shadow-md group">
+          <img
+            className="w-full h-full object-cover group-hover:scale-105 duration-300"
+            src={recipe?.image_url}
+            alt={recipe?.title}
+          />
         </div>
-        <div className="ingradients">
-          <span className="ing-title">Ingredients</span>
-          <ul>
+        <div className="ingradients mt-10">
+          <span className="ing-title text-3xl font-medium mb-5 inline-block">
+            Ingredients:
+          </span>
+          <ul className="flex flex-col gap-2">
             {recipe?.ingredients?.map((ing, i) => (
               <li key={i}>
                 ✔ {ing.quantity} {ing.unit} {ing.description}
@@ -34,16 +56,49 @@ const RecipeItem = () => {
           </ul>
         </div>
       </div>
-      <div className="right">
-        <span className="publisher">{recipe?.publisher}</span>
-        <h2 className="title">{recipe?.title}</h2>
-        <div className="servings-cooking-time">
+      <div className="right flex flex-col gap-5">
+        <span className="publisher uppercase tracking-widest font-semibold text-sky-400 ">
+          {recipe?.publisher}
+        </span>
+        <h2 className="title text-4xl capitalize">{recipe?.title}</h2>
+        <div className="servings-cooking-time flex gap-5 uppercase tracking-widest font-semibold text-rose-500">
           <div className="servings">Served for :{recipe?.servings} people</div>
           <div className="cooking-time">
+            Cooking time :
             {recipe?.cooking_time < 60
               ? String(recipe?.cooking_time) + "min"
               : durationCalc(recipe?.cooking_time / 60)}
           </div>
+        </div>
+        <div className="btns">
+          <button
+            onClick={() => favouriteHandler(recipe?.id)}
+            className={`bg-gradient-to-br p-3 px-8 rounded-lg text-sm uppercase font-medium tracking-wider mt-2 inline-block shadow-md hover:shadow-lg duration-300 ${
+              itemsSavedStatus
+                ? " from-rose-400 to-rose-600 text-rose-50  shadow-rose-200  hover:shadow-rose-300"
+                : " from-sky-400 to-sky-600 text-sky-50  shadow-sky-200  hover:shadow-sky-300"
+            }`}
+          >
+            {itemsSavedStatus
+              ? "- Remove From Favourites"
+              : "+ Save As Favourites"}
+          </button>
+
+          <a
+            className="bg-gradient-to-br from-purple-400 to-purple-600 text-purple-50 p-3 px-8 rounded-lg text-sm uppercase font-medium tracking-wider mt-2 inline-block shadow-md shadow-purple-200 hover:shadow-lg hover:shadow-purple-300 duration-300"
+            href={recipe?.source_url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Get directions
+          </a>
+
+          <Link
+            className="bg-gradient-to-br from-rose-400 to-rose-600 text-rose-50 p-3 px-8 rounded-lg text-sm uppercase font-medium tracking-wider mt-2 inline-block shadow-md shadow-rose-200 hover:shadow-lg hover:shadow-rose-300 duration-300"
+            to="/"
+          >
+            Back to home
+          </Link>
         </div>
       </div>
     </div>
