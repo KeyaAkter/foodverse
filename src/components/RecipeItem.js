@@ -42,7 +42,7 @@ const RecipeItem = ({ favouriteHandler, savedItems }) => {
       ) : (
         <div className="recipe-item container mx-auto py-20 grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div className="left row-start-2 lg:row-start-auto">
-            <div className="img overflow-hidden flex justify-center items-center lg:h-96 rounded-xl border shadow-md group">
+            <div className="img overflow-hidden flex justify-center items-center h-96 rounded-xl border shadow-md group">
               <img
                 className="w-full block rounded-xl group-hover:scale-105 duration-300"
                 src={recipe?.image_url}
