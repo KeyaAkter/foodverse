@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useFetch } from "../hooks/useFetch";
 import Spinner from "./Spinner";
+import { GiKnifeFork } from "react-icons/gi";
+import { BsClock, BsPerson } from "react-icons/bs";
 
 const RecipeItem = ({ favouriteHandler, savedItems }) => {
-  const { id } = useParams(); // The useParams hook returns an object of key/value pairs of the dynamic params from the current URL that were matched by the <Route path>
+  const { id } = useParams();
   const { data: recipe, loading, error } = useFetch(id); // calling custom hook to get the specific recipe item
 
   const [itemsSavedStatus, setItemsSavedStatus] = useState(null);
@@ -48,9 +50,12 @@ const RecipeItem = ({ favouriteHandler, savedItems }) => {
               />
             </div>
             <div className="ingredients mt-10">
-              <span className="ing-title text-3xl font-medium mb-5 inline-block">
+              <h2 className="ing-title text-2xl lg:text-4xl font-medium mb-5 flex gap-3 items-center">
+                <span className="text-rose-500">
+                  <GiKnifeFork />
+                </span>{" "}
                 Ingredients:
-              </span>
+              </h2>
               <hr className="border-rose-100" />
               <ul className="flex flex-col gap-2 mt-5">
                 {recipe?.ingredients?.map((ing, i) => (
@@ -67,10 +72,12 @@ const RecipeItem = ({ favouriteHandler, savedItems }) => {
             </span>
             <h2 className="title text-5xl capitalize">{recipe?.title}</h2>
             <div className="servings-cooking-time flex gap-5 uppercase tracking-widest font-semibold text-rose-500">
-              <div className="servings">
+              <div className="servings flex gap-2 items-center">
+                <BsPerson />
                 Served for : {recipe?.servings} people
               </div>
-              <div className="cooking-time">
+              <div className="cooking-time flex gap-2 items-center">
+                <BsClock />
                 Cooking time :{" "}
                 {recipe?.cooking_time < 60
                   ? String(recipe?.cooking_time) + "min"
