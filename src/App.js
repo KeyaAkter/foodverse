@@ -1,11 +1,12 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import Footer from "./components/Footer";
+import { Route, Routes, useNavigate } from "react-router-dom";
+
+import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import Favourites from "./components/Favourites";
-import NotFound from "./components/NotFound";
-import Navbar from "./components/Navbar";
 import RecipeItem from "./components/RecipeItem";
+import Footer from "./components/Footer";
+import NotFound from "./components/NotFound";
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -17,9 +18,9 @@ const App = () => {
     return localData ? JSON.parse(localData) : [];
   }); // Set the existing data at initial value if it already exists in local storage; otherwise, set the empty array as initial value.
 
-  const navigate = useNavigate();
-
   const inputField = useRef(null);
+
+  const navigate = useNavigate();
 
   const searchHandler = (e) => {
     e.preventDefault();
@@ -27,13 +28,17 @@ const App = () => {
     getData(searchQuery); // giving the search value to getData func so that it can fetch data from api using this search value
 
     setSearchQuery(""); // reset the search input value to empty sring
+
     inputField.current.blur(); // after completion of search, the cursor will be blur
+
     setRecipes([]); // reset the state of recipes array everytime after submitting the form
+
     setError("");
-    navigate("/");
+
+    navigate("/"); // navigate to home page from any page
   };
 
-  // getting search data from api
+  // getting search data from the API
   const getData = async (searchQuery) => {
     try {
       setLoading(true); // set the loading value to true if it takes a while to fetch the data.
@@ -71,7 +76,7 @@ const App = () => {
     }
   };
 
-  // fetching a certain item with a specific item id
+  // fetching a certain item with a specific item id in the favourites page
   const favouriteHandler = (id) => {
     fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`)
       .then((res) => res.json())
